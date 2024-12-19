@@ -32,3 +32,47 @@ h1{
     color: white;
     padding-top: 30px;
 }
+.main-content{
+    width: 1000px;
+    margin: 0 auto;
+}
+#boxes-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.single-box{
+    border-radius: 15px;
+    height: 100px;
+    width: calc((100% / 8) - 25px);
+    margin-top: 25px;
+    margin-right: 25px;
+    background-color: #2E6754;
+    cursor: pointer;
+}
+.single-box:nth-child(8n) {
+    margin-right: 0;
+}
+.single-box:last-child {
+    width: 100%; /* Fai occupare all'ultima casella tutta la larghezza */
+    margin-right: 0; /* Rimuovi il margine destro */
+    background-color:#D4D6F5;
+
+}
+.day-number{
+    width: 100%;
+    height: 50%;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+.day-number>span{
+    width: 100%;
+    height: 100%;
+    color: white;
+    text-align: center;
+}
+/* Modifica il colore dell'ultimo span all'interno dell'ultimo single-box */
+.single-box:last-child .day-number > span {
+    color: #2E6754; 
+}
