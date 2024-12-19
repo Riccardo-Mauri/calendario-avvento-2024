@@ -10,8 +10,25 @@ RESET
 /*
 MAIN
 */
- h1{
-    font-size: 3rem;
-    font-weight: bold;
+
+body{
+    background-color:#100645;
+}
+
+header{
+    width: 1000px;
+    background-color:#2D28EB;
+    min-height: 230px;
+    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+    margin: 0 auto;
+    background-image: url(/images/header-bg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+h1{
     text-align: center;
- }
+    color: white;
+    padding-top: 30px;
+}
