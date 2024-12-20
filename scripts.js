@@ -169,7 +169,39 @@ function generateBoxes(numberOfBoxes) {
         box.appendChild(dayNumber);
         // Aggiunge il box creato al contenitore
         container.appendChild(box);
+
+        //aggiungo un evento click per caricare e aprire il mio modale quando clicchi una casella
+        box.addEventListener("click", ()=>{
+            openModal(`Hai cliccatto sulla casella ${i}`);
+        })
     }
 }
 //funzione che richiama il numero di box da generare
 generateBoxes(25);
+//funzione per definire il modale
+function openModal(content){
+    const modal = document.getElementById("myModal");
+    const modalContent = document.getElementById("modal-body");
+    modalContent.textContent = content;
+    modal.style.display = "flex";
+}
+// Funzione per chiudere la modale
+function closeModal() {
+    const modal = document.getElementById("myModal");
+    modal.style.display = "none"; // Nasconde la modale
+  }
+  
+  // Aggiungi evento click per chiudere la modale cliccando fuori dal contenuto
+  document.getElementById("myModal").addEventListener("click", (event) => {
+    if (event.target === event.currentTarget) {
+      closeModal();
+    }
+  });
+
+//creo il modale che si carica al premere di una casella, al suo interno c'è O un testo O una gif in base all'oggetto dell'array caricato.
+
+const modal = document.getElementById("myModal");
+
+const modalBody = document.getElementById("modal-body");
+
+const closeBtn = document.querySelector("close-btn");
