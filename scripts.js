@@ -5,12 +5,12 @@ const source = [
     {
         "type": "image",
         "icon": "images/icons/ico-neve.png",
-        "url": "images/gremlins.gif"
+        "url": "images/gifs/gremlins.gif"
     },
     {
         "type": "image",
         "icon": "images/icons/ico-albero.png",
-        "url": "images/friends.gif"
+        "url": "images/gifs/friends.gif"
     },
     {
         "type": "text",
@@ -20,7 +20,7 @@ const source = [
     {
         "type": "image",
         "icon": "images/icons/ico-stella.png",
-        "url": "images/homealone.gif"
+        "url": "images/gifs/homealone.gif"
     },
     {
         "type": "text",
@@ -30,7 +30,7 @@ const source = [
     {
         "type": "image",
         "icon": "images/icons/ico-stella.png",
-        "url": "images/griffin.gif"
+        "url": "images/gifs/griffin.gif"
     },
     {
         "type": "text",
@@ -45,7 +45,7 @@ const source = [
     {
         "type": "image",
         "icon": "images/icons/ico-calza.png",
-        "url": "images/skeleton.gif"
+        "url": "images/gifs/skeleton.gif"
     },
     {
         "type": "text",
@@ -70,7 +70,7 @@ const source = [
     {
         "type": "image",
         "icon": "images/icons/ico-stella.png",
-        "url": "images/nightmare.gif"
+        "url": "images/gifs/nightmare.gif"
     },
     {
         "type": "text",
@@ -80,7 +80,7 @@ const source = [
     {
         "type": "image",
         "icon": "images/icons/ico-calza.png",
-        "url": "images/grinch.gif"
+        "url": "images/gifs/grinch.gif"
     },
     {
         "type": "text",
@@ -105,17 +105,17 @@ const source = [
     {
         "type": "image",
         "icon": "images/icons/ico-caramella.png",
-        "url": "images/poltrona.gif"
+        "url": "images/gifs/poltrona.gif"
     },
     {
         "type": "image",
         "icon": "images/icons/ico-caramella.png",
-        "url": "images/spongebob.gif"
+        "url": "images/gifs/spongebob.gif"
     },
     {
         "type": "image",
         "icon": "images/icons/ico-neve.png",
-        "url": "images/elf.gif"
+        "url": "images/gifs/elf.gif"
     },
     {
         "type": "text",
@@ -125,7 +125,7 @@ const source = [
     {
         "type": "image",
         "icon": "images/icons/ico-caramella.png",
-        "url": "images/dance.gif"
+        "url": "images/gifs/dance.gif"
     }
 ];
 console.log(source);
@@ -148,13 +148,13 @@ function generateBoxes(numberOfBoxes) {
         box.classList.add('single-box'); // Aggiungi la classe "single-box"
         box.id = `box-${i}`; // Imposta un id univoco per ogni casella
 
-        // Seleziona un'icona casuale dall'array source
-        const randomIcon = source[Math.floor(Math.random() * source.length)];
+        // Seleziona un elemento casuale dall'array source
+        const randomContent = source[Math.floor(Math.random() * source.length)];
         // Crea un'immagine e la aggiunge
         const iconDiv = document.createElement('div');
         iconDiv.classList.add('icon');
         const img = document.createElement('img');
-        img.src = randomIcon.icon;  // Usa il nome del file con l'estensione .png direttamente
+        img.src = randomContent.icon;  // Usa il nome del file con l'estensione .png direttamente
         img.alt = `Icona giorno ${i}`;
         iconDiv.appendChild(img);
         // Crea un div per il numero del giorno
@@ -172,17 +172,31 @@ function generateBoxes(numberOfBoxes) {
 
         //aggiungo un evento click per caricare e aprire il mio modale quando clicchi una casella
         box.addEventListener("click", ()=>{
-            openModal(`Hai cliccatto sulla casella ${i}`);
+            openModal(randomContent);
         })
     }
 }
 //funzione che richiama il numero di box da generare
 generateBoxes(25);
+
 //funzione per definire il modale
 function openModal(content){
     const modal = document.getElementById("myModal");
     const modalContent = document.getElementById("modal-body");
-    modalContent.textContent = content;
+       // Pulisce il contenuto precedente
+       modalContent.innerHTML = '';
+    // Controlla il tipo di contenuto e aggiungilo alla modale
+    if (content.type === "image") {
+        const img = document.createElement("img");
+        img.src = content.url;
+        img.alt = "Immagine casuale";
+        img.style.maxWidth = "100%";
+        modalContent.appendChild(img);
+    } else if (content.type === "text") {
+        const text = document.createElement("p");
+        text.textContent = content.text;
+        modalContent.appendChild(text);
+    }
     modal.style.display = "flex";
 }
 // Funzione per chiudere la modale
@@ -197,11 +211,15 @@ function closeModal() {
       closeModal();
     }
   });
+// Funzione per selezionare un elemento casuale e rimuoverlo dall'array
+function getRandomUniqueContent() {
+    if (source.length === 0) {
+        return null; // Se l'array è vuoto, ritorna null
+    }
+    const randomIndex = Math.floor(Math.random() * source.length); // Ottieni un indice casuale
+    const selectedContent = source[randomIndex]; // Seleziona l'elemento casuale
+    source.splice(randomIndex, 1); // Rimuovi l'elemento dall'array
+    return selectedContent; // Ritorna l'elemento selezionato
+}
 
-//creo il modale che si carica al premere di una casella, al suo interno c'è O un testo O una gif in base all'oggetto dell'array caricato.
 
-const modal = document.getElementById("myModal");
-
-const modalBody = document.getElementById("modal-body");
-
-const closeBtn = document.querySelector("close-btn");
