@@ -59,6 +59,12 @@ h1{
     background-color:#D4D6F5;
 
 }
+/* box cliccata cambia stile */
+.clicked-box{
+    margin-top: 25px;
+    margin-right: 25px;
+    width: calc((100% / 8) - 25px);
+}
 .day-number{
     width: 100%;
     height: 50%;

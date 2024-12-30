@@ -133,14 +133,14 @@ console.log(source);
 //genero i numeri in modo crescente per definire i giorni delle caselle
 let dayNumber = [];
 for (let i = 0; i < 25; i++) {
-    console.log(i+1);
-    dayNumber.push(i+1)
+    console.log(i + 1);
+    dayNumber.push(i + 1)
 }
 console.log(dayNumber);
 
 // Seleziona il contenitore che ospiterà le caselle
 const container = document.getElementById('boxes-container');
-
+//creo una variabile per le caselle cliccate
 function generateBoxes(numberOfBoxes) {
     for (let i = 1; i <= numberOfBoxes; i++) {
         // Crea un nuovo div per ogni casella
@@ -171,8 +171,12 @@ function generateBoxes(numberOfBoxes) {
         container.appendChild(box);
 
         //aggiungo un evento click per caricare e aprire il mio modale quando clicchi una casella
-        box.addEventListener("click", ()=>{
+        box.addEventListener("click", () => {
             openModal(randomContent);
+            /*cambio stile della casella cliccata in modo che rimanga chiusa e cambi stile*/
+                box.classList.remove("single-box");
+                box.classList.add("clicked-box");
+        //rimuovo l'eventlistener così non posso più cliccare la stessa icona
         })
     }
 }
@@ -180,11 +184,11 @@ function generateBoxes(numberOfBoxes) {
 generateBoxes(25);
 
 //funzione per definire il modale
-function openModal(content){
+function openModal(content) {
     const modal = document.getElementById("myModal");
     const modalContent = document.getElementById("modal-body");
-       // Pulisce il contenuto precedente
-       modalContent.innerHTML = '';
+    // Pulisce il contenuto precedente
+    modalContent.innerHTML = '';
     // Controlla il tipo di contenuto e aggiungilo alla modale
     if (content.type === "image") {
         const img = document.createElement("img");
@@ -203,14 +207,14 @@ function openModal(content){
 function closeModal() {
     const modal = document.getElementById("myModal");
     modal.style.display = "none"; // Nasconde la modale
-  }
-  
-  // Aggiungi evento click per chiudere la modale cliccando fuori dal contenuto
-  document.getElementById("myModal").addEventListener("click", (event) => {
+}
+
+// Aggiungi evento click per chiudere la modale cliccando fuori dal contenuto
+document.getElementById("myModal").addEventListener("click", (event) => {
     if (event.target === event.currentTarget) {
-      closeModal();
+        closeModal();
     }
-  });
+});
 // Funzione per selezionare un elemento casuale e rimuoverlo dall'array
 function getRandomUniqueContent() {
     if (source.length === 0) {
