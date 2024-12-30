@@ -6,7 +6,6 @@ RESET
     padding: 0;
     box-sizing: border-box;
 }
-
 /*
 MAIN
 */
@@ -59,15 +58,30 @@ h1{
     background-color:#D4D6F5;
 
 }
+.single-box:last-child>.icon>img{
+    width: 50px;
+    height: 50px;
+}
 /* box cliccata cambia stile */
 .clicked-box{
     margin-top: 25px;
     margin-right: 25px;
     width: calc((100% / 8) - 25px);
 }
+.clicked-box:nth-child(8n) {
+    margin-right: 0;
+}
+.clicked-box:last-child{
+    width: 100%;
+    margin-right: 0;
+}
+.clicked-box:last-child>.icon>img{
+    width: 50px;
+    height: 50px;
+}
 .day-number{
     width: 100%;
-    height: 50%;
+    height: 100%;
     text-align: center;
     font-size: 2rem;
     font-weight: bold;
@@ -83,6 +97,14 @@ h1{
     color: #2E6754; 
 }
 
+.icon{
+    display: flex;
+    justify-content: center;
+}
+.icon>img{
+    width: 50%;
+    height: 50%;
+}
 /* Sfondo overlay */
 .modal-overlay {
     position: fixed;
