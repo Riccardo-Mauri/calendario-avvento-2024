@@ -171,12 +171,13 @@ function generateBoxes(numberOfBoxes) {
         container.appendChild(box);
 
         //aggiungo un evento click per caricare e aprire il mio modale quando clicchi una casella
-        box.addEventListener("click", () => {
+        box.addEventListener("click", function handleClick() {
             openModal(randomContent);
             /*cambio stile della casella cliccata in modo che rimanga chiusa e cambi stile*/
                 box.classList.remove("single-box");
                 box.classList.add("clicked-box");
         //rimuovo l'eventlistener così non posso più cliccare la stessa icona
+        box.removeEventListener("click", handleClick);
         })
     }
 }
