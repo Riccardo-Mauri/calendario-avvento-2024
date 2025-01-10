@@ -37,7 +37,7 @@ const source = [
         "icon": "images/icons/ico-pupazzo.png",
         "text": "Babbo Natale non ha sempre indossato abiti rossi!Lo sapevi che anni fa indossava il verde?"
     },
-    {
+    {   
         "type": "text",
         "icon": "images/icons/ico-caramella.png",
         "text": "Jingle Bells, Jingle Bells: non mentire, l’hai letta cantando. Sapevi che la canzone più famosa del natale è anche stata la prima cantata nello spazio?"
@@ -138,93 +138,142 @@ for (let i = 0; i < 25; i++) {
 }
 console.log(dayNumber);
 
-// Seleziona il contenitore che ospiterà le caselle
+// Contenitore delle caselle
 const container = document.getElementById('boxes-container');
-//creo una variabile per le caselle cliccate
-function generateBoxes(numberOfBoxes) {
-    for (let i = 1; i <= numberOfBoxes; i++) {
-        // Crea un nuovo div per ogni casella
-        const box = document.createElement('div');
-        box.classList.add('single-box'); // Aggiungi la classe "single-box"
-        box.id = `box-${i}`; // Imposta un id univoco per ogni casella
 
-        // Seleziona un elemento casuale dall'array source
-        const randomContent = source[Math.floor(Math.random() * source.length)];
-        // Crea un'immagine e la aggiunge
+// Carica le caselle dallo storage, o inizializza un array vuoto
+let boxesState = JSON.parse(localStorage.getItem('boxesState')) || [];
+
+// Funzione per generare le caselle
+function generateBoxes(numberOfBoxes) {
+    // Se non ci sono caselle salvate, generale casualmente
+    if (boxesState.length === 0) {
+        for (let i = 1; i <= numberOfBoxes; i++) {
+            const randomContent = getRandomUniqueContent(); // Genera contenuto casuale
+            boxesState.push({ id: i, content: randomContent, isOpened: false }); // Salva lo stato iniziale
+        }
+        // Salva lo stato nel localStorage
+        localStorage.setItem('boxesState', JSON.stringify(boxesState));
+    }
+
+    // Crea le caselle dal loro stato salvato
+    boxesState.forEach((boxState) => {
+        const box = document.createElement('div');
+        box.classList.add('single-box'); // Stile di default
+        box.id = `box-${boxState.id}`;
+
+        // Se la casella è stata aperta, applica lo stile "cliccato"
+        if (boxState.isOpened) {
+            box.classList.remove('single-box');
+            box.classList.add('clicked-box');
+        }
+
+        // Crea l'icona
         const iconDiv = document.createElement('div');
         iconDiv.classList.add('icon');
         const img = document.createElement('img');
-        img.src = randomContent.icon;  // Usa il nome del file con l'estensione .png direttamente
-        img.alt = `Icona giorno ${i}`;
+        img.src = boxState.content.icon;
+        img.alt = `Icona giorno ${boxState.id}`;
         iconDiv.appendChild(img);
-        // Crea un div per il numero del giorno
+
+        // Crea il numero del giorno
         const dayNumber = document.createElement('div');
         dayNumber.classList.add('day-number');
         const span = document.createElement('span');
-        span.textContent = i; // Imposta il numero del giorno
+        span.textContent = boxState.id;
         dayNumber.appendChild(span);
-        // Aggiunge l'icona e il numero del giorno al box
+
+        // Aggiunge l'icona e il numero al box
         box.appendChild(iconDiv);
-        // Aggiunge il numero del giorno al box
         box.appendChild(dayNumber);
-        // Aggiunge il box creato al contenitore
+
+        // Aggiungo l'evento click solo se la casella non è stata aperta
+        if (!boxState.isOpened) {
+            box.addEventListener('click', function handleClick() {
+                openModal(boxState.content);
+
+                // Aggiorna lo stile della casella
+                box.classList.remove('single-box');
+                box.classList.add('clicked-box');
+
+                // Aggiorna lo stato della casella
+                boxState.isOpened = true;
+                localStorage.setItem('boxesState', JSON.stringify(boxesState));
+
+                // Rimuove l'event listener
+                box.removeEventListener('click', handleClick);
+            });
+        }
+
+        // Aggiungo il box al contenitore
         container.appendChild(box);
-
-        //aggiungo un evento click per caricare e aprire il mio modale quando clicchi una casella
-        box.addEventListener("click", function handleClick() {
-            openModal(randomContent);
-            /*cambio stile della casella cliccata in modo che rimanga chiusa e cambi stile*/
-                box.classList.remove("single-box");
-                box.classList.add("clicked-box");
-        //rimuovo l'eventlistener così non posso più cliccare la stessa icona
-        box.removeEventListener("click", handleClick);
-        })
-    }
+    });
 }
-//funzione che richiama il numero di box da generare
-generateBoxes(25);
 
-//funzione per definire il modale
+// Funzione per aprire la modale
 function openModal(content) {
-    const modal = document.getElementById("myModal");
-    const modalContent = document.getElementById("modal-body");
-    // Pulisce il contenuto precedente
-    modalContent.innerHTML = '';
-    // Controlla il tipo di contenuto e aggiungilo alla modale
-    if (content.type === "image") {
-        const img = document.createElement("img");
+    const modal = document.getElementById('myModal');
+    const modalContent = document.getElementById('modal-body');
+    modalContent.innerHTML = ''; // Pulisce la modale
+    if (content.type === 'image') {
+        const img = document.createElement('img');
         img.src = content.url;
-        img.alt = "Immagine casuale";
-        img.style.maxWidth = "100%";
+        img.alt = 'Immagine casuale';
+        img.style.maxWidth = '100%';
         modalContent.appendChild(img);
-    } else if (content.type === "text") {
-        const text = document.createElement("p");
+    } else if (content.type === 'text') {
+        const text = document.createElement('p');
         text.textContent = content.text;
         modalContent.appendChild(text);
     }
-    modal.style.display = "flex";
-}
-// Funzione per chiudere la modale
-function closeModal() {
-    const modal = document.getElementById("myModal");
-    modal.style.display = "none"; // Nasconde la modale
+    modal.style.display = 'flex';
 }
 
-// Aggiungi evento click per chiudere la modale cliccando fuori dal contenuto
-document.getElementById("myModal").addEventListener("click", (event) => {
+// Funzione per chiudere la modale
+function closeModal() {
+    const modal = document.getElementById('myModal');
+    modal.style.display = 'none';
+}
+
+document.getElementById('myModal').addEventListener('click', (event) => {
     if (event.target === event.currentTarget) {
         closeModal();
     }
 });
-// Funzione per selezionare un elemento casuale e rimuoverlo dall'array
+
+// Funzione per selezionare un contenuto unico casuale
 function getRandomUniqueContent() {
     if (source.length === 0) {
-        return null; // Se l'array è vuoto, ritorna null
+        return null;
     }
-    const randomIndex = Math.floor(Math.random() * source.length); // Ottieni un indice casuale
-    const selectedContent = source[randomIndex]; // Seleziona l'elemento casuale
-    source.splice(randomIndex, 1); // Rimuovi l'elemento dall'array
-    return selectedContent; // Ritorna l'elemento selezionato
+    const randomIndex = Math.floor(Math.random() * source.length);
+    const selectedContent = source[randomIndex];
+    source.splice(randomIndex, 1);
+    return selectedContent;
 }
+function resetLocalStorage() {
+    // Cancella tutti i dati salvati in localStorage
+    localStorage.clear();
+    console.log('LocalStorage è stato resettato.');
+    
+    // Ricarica la pagina
+    window.location.reload();
+}
+
+// Aggiungo un pulsante per resettare
+const resetButton = document.createElement('button');
+resetButton.textContent = 'Resetta il Calendario';
+resetButton.style.marginTop = '20px';
+resetButton.style.padding = '10px 20px';
+resetButton.style.fontSize = '16px';
+resetButton.style.cursor = 'pointer';
+resetButton.addEventListener('click', resetLocalStorage);
+
+// Aggiungo il pulsante al body della pagina
+document.body.appendChild(resetButton);
+
+
+// Genera le caselle
+generateBoxes(25);
 
 
